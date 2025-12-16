@@ -59,6 +59,8 @@ OUTPUT_BIN = $(OUTPUT_NAME).bin
 
 OUTPUT_ELF = $(OUTPUT_NAME).elf
 
+OUTPUT_HEX = $(OUTPUT_NAME).hex
+
 OUTPUT_MAP = $(OUTPUT_NAME).map
 
 OUTPUT_DUMP = $(OUTPUT_NAME).dump
@@ -110,6 +112,8 @@ LD_LIBS =
 
 OBJCOPY_FLAGS = -O binary
 
+OBJCOPY_HEX_FLAGS = -j .text -j .data -O ihex
+
 SZ_FLAGS = --format=berkeley
 
 #######
@@ -132,11 +136,13 @@ ifeq ($(verbose),1)
 	$(OBJCOPY) $< $(OBJCOPY_FLAGS) $@
 	$(SIZE) $(SZ_FLAGS) $(OUTPUT_ELF)
 	$(OBJDUMP) -d $(OUTPUT_ELF) > $(OUTPUT_DUMP)
+	$(OBJCOPY) $(OBJCOPY_HEX_FLAGS) $(OUTPUT_ELF) $(OUTPUT_HEX)
 # else, hide
 else
 	@$(OBJCOPY) $< $(OBJCOPY_FLAGS) $@
 	@$(SIZE) $(SZ_FLAGS) $(OUTPUT_ELF)
 	@$(OBJDUMP) -d $(OUTPUT_ELF) > $(OUTPUT_DUMP)
+	@$(OBJCOPY) $(OBJCOPY_HEX_FLAGS) $(OUTPUT_ELF) $(OUTPUT_HEX)
 endif
 	
 $(OUTPUT_ELF): $(C_OBJS) $(ASM_OBJS) $(LDSCRIPT)
@@ -192,6 +198,7 @@ all: $(OUTPUT_BIN)
 clean:
 	@rm -f $(OUTPUT_BIN)
 	@rm -f $(OUTPUT_ELF)
+	@rm -f $(OUTPUT_HEX)
 	@rm -f $(OUTPUT_MAP)
 	@rm -f $(C_OBJS)
 	@rm -f $(ASM_OBJS)
