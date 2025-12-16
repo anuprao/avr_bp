@@ -1,4 +1,4 @@
-## Dredits
+## Credits
 
 This project is influenced by a few other projects and also uses certain vendor provided files.
 
